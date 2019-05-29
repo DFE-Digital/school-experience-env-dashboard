@@ -6,7 +6,7 @@ variables:
   POSTGRES_IMAGE: mdillon/postgis:11-alpine
   # define four more variables imageName, dockerId, dockerPassword and dockerRegistry in the build pipeline in UI
   POSTGRESS_PASSWORD: secret
-  DATABASE_URL: postgis://postgres:secret@postgres/school_experience_test
+  DATABASE_URL: postgis://postgres:secret@postgres/environment_dashboard
   SECRET_KEY_BASE: stubbed
 
 steps:
