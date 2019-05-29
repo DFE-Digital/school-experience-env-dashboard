@@ -1,0 +1,62 @@
+pool:
+  vmImage: 'ubuntu-16.04'
+
+variables:
+  imageTag: v$(Build.BuildId)
+  POSTGRES_IMAGE: mdillon/postgis:11-alpine
+  # define four more variables imageName, dockerId, dockerPassword and dockerRegistry in the build pipeline in UI
+  POSTGRESS_PASSWORD: secret
+  DATABASE_URL: postgis://postgres:secret@postgres/school_experience_test
+  SECRET_KEY_BASE: stubbed
+
+steps:
+
+  - script: docker login $(dockerRegistry) -u $(dockerId) -p $pswd
+    env:
+      pswd: $(dockerPassword)
+    displayName: 'Docker login'
+
+  - script: docker run --name=postgres -e POSTGRES_PASSWORD -d $(POSTGRES_IMAGE)
+    displayName: Launch Postgres # done early to give it time to boot
+
+  - script: docker pull $(dockerRegistry)/$(imageName):latest || true
+    displayName: Retrieve latest Docker build to use as cache
+    condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
+
+  - script: docker build -f Dockerfile --cache-from=$(dockerRegistry)/$(imageName):latest -t $(dockerRegistry)/$(imageName):$(imageTag) .
+    displayName: Build Docker Image using Cache
+    condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
+
+  - script: docker build -f Dockerfile -t $(dockerRegistry)/$(imageName):$(imageTag) .
+    displayName: Build Docker Image without Cache
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+
+  - script: docker run --rm --link postgres:postgres -e DATABASE_URL -e RAILS_ENV=test $(dockerRegistry)/$(imageName):$(imageTag) rake db:create db:test:prepare
+    displayName: Create Testing databases, import schema and fixtures
+  - script: docker run --rm --link postgres:postgres -e DATABASE_URL -e RAILS_ENV=test $(dockerRegistry)/$(imageName):$(imageTag) rspec
+    displayName: Run the Specs
+  
+  - script: |
+      docker push $(dockerRegistry)/$(imageName):$(imageTag)
+      docker tag $(dockerRegistry)/$(imageName):$(imageTag) $(dockerRegistry)/$(imageName):latest
+      docker push $(dockerRegistry)/$(imageName):latest
+      docker tag $(dockerRegistry)/$(imageName):$(imageTag) $(DOCKER_HUB_REPO):$(imageTag)
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    displayName: 'Push Docker image (built from master)'
+
+  - task: Docker@2
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    displayName: login
+    inputs:
+      containerRegistry: $(DOCKER_HUB_CONNECTION_NAME)
+      command: login
+
+  - task: Docker@2
+    displayName: 'push to docker hub'
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    inputs:
+      containerRegistry: $(DOCKER_HUB_CONNECTION_NAME)
+      repository: $(DOCKER_HUB_REPO)
+      command: push
+      tags: $(imageTag)
+

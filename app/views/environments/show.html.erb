@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @environment.name %>
+</p>
+
+<p>
+  <strong>Version:</strong>
+  <%= @environment.version %>
+</p>
+
+<p>
+  <strong>Git hub release:</strong>
+  <%= @environment.git_hub_release %>
+</p>
+
+<p>
+  <strong>Url:</strong>
+  <%= @environment.url %>
+</p>
+
+<p>
+  <strong>Db url:</strong>
+  <%= @environment.db_url %>
+</p>
+
+<p>
+  <strong>Db user:</strong>
+  <%= @environment.db_user %>
+</p>
+
+<%= link_to 'Edit', edit_environment_path(@environment) %> |
+<%= link_to 'Back', environments_path %>
