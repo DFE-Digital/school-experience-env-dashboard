@@ -33,8 +33,6 @@ steps:
 
   - script: docker run --rm --link postgres:postgres -e DATABASE_URL -e RAILS_ENV=test $(dockerRegistry)/$(imageName):$(imageTag) rake db:create db:test:prepare
     displayName: Create Testing databases, import schema and fixtures
-  - script: docker run --rm --link postgres:postgres -e DATABASE_URL -e RAILS_ENV=test $(dockerRegistry)/$(imageName):$(imageTag) rspec
-    displayName: Run the Specs
   
   - script: |
       docker push $(dockerRegistry)/$(imageName):$(imageTag)
