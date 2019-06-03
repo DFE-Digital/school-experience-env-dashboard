@@ -4,7 +4,7 @@ class EnvironmentsController < ApplicationController
   # GET /environments
   # GET /environments.json
   def index
-    @environments = Environment.all
+    @environments = Environment.all.order("id ASC")
   end
 
   # GET /environments/1
