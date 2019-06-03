@@ -18,17 +18,10 @@ namespace :environment do
 
   end
 
-  task :work, [:option, :foo, :bar] do |task, args|
+  desc "Provides a way for the pipeline to initialize an environment name"
+  task :initialise, [:name] => :environment do |task, args|
     puts "work", args
+    environment = Environment.find_or_create_by(name: args[:name])
+    puts environment
   end
-
-  task :update2, :name, :version do |task, args|
-    puts "update2", args
-  end
-
-  task :with_defaults, :arg1, :arg2 do |t, args|
-    args.with_defaults(:arg1 => :default_1, :arg2 => :default_2)
-    puts "Args with defaults were: #{args}"
-  end
-
 end
