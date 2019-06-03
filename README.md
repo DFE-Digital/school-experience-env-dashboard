@@ -5,15 +5,15 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+## Ruby version
 
 The Ruby version mandated is 2.5.5
 
-* Build
+## Build
   
     docker build  -t environment-dashboard:latest .  
 
-* Local Deployment
+## Local Deployment
 
     export DATABASE_URL='postgres://postgres:secret@postgres/environment_dashboard'
     docker run --name=postgres -e POSTGRES_PASSWORD -d postgres:11-alpine
@@ -26,12 +26,12 @@ The Ruby version mandated is 2.5.5
 
     docker run --rm --link postgres:postgres -e DATABASE_URL -e WEB_HOOK_KEY=123456789 -e SECURE_USERNAME=environments -e SECURE_PASSWORD=dashboard -p 3000:3000 environment-dashboard:latest
 
-* Testing
+## Testing
 
-    Create a file data.json with contents
+Create a file data.json with contents
 
     { "web_hook_key" : "123456789", "environment": {"id":1,"name":"Dev","version":"v100","git_hub_release":"https://release","url":"https://environmentsdashboard2.azurewebsites.net/environments/1.json","db_url":"asdasd","db_user":"asdppeppeppep","created_at":"2019-05-31T12:26:28.203Z","updated_at":"2019-05-31T12:26:28.203Z"}}
 
-    Then to invoke the web hook
+Then to invoke the web hook
 
     curl -f -X PATCH http://environments:dashboard@localhost:3000/environmentsByName.json -d @data.json --header "Content-Type: application/json"    
