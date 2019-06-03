@@ -22,6 +22,6 @@ namespace :environment do
   task :initialise, [:name] => :environment do |task, args|
     puts "work", args
     environment = Environment.find_or_create_by(name: args[:name])
-    puts environment
+    puts environment.inspect
   end
 end
