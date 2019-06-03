@@ -18,7 +18,6 @@
     <% @environments.each do |environment| %>
       <tr>
         <td><a href="<%= environment.url %>"><%= environment.name %></a></td>
-        <td><%= environment.name %></td>
         <td><%= environment.version %></td>
         <td><%= environment.git_hub_release %></td>
         <td><%= environment.db_url %></td>
