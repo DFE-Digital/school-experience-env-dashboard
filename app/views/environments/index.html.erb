@@ -17,8 +17,12 @@
     <% @environments.each do |environment| %>
       <tr>
         <td align="left"><a href="<%= environment.url %>"><%= environment.name %></a></td>
-        <td align="left"><%= environment.version %> (<a href="<%= environment.git_hub_release %>">release</a>)</td> 
-        <td><% if environment.git_hub_release != "" %> (<a href="<%= environment.git_hub_release %>">release</a>)<% end %></td>
+        <td align="left"><%= environment.version %></td> 
+        <td>
+          <% if environment.git_hub_release.present? %> 
+             (<a href="<%= environment.git_hub_release %>">release notes</a>)
+          <% end %>
+       </td>
 <!--        <td><%= environment.db_url %></td>
         <td><%= environment.db_user %></td>-->
       </tr>
