@@ -5,8 +5,8 @@
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Version</th>
+      <th align="left">Name</th>
+      <th align="left">Version</th>
 <!--  <th>Git hub release</th>
       <th>Db url</th>
       <th>Db user</th>-->
@@ -16,8 +16,8 @@
   <tbody>
     <% @environments.each do |environment| %>
       <tr>
-        <td><a href="<%= environment.url %>"><%= environment.name %></a></td>
-        <td><%= environment.version %></td>
+        <td align="left"><a href="<%= environment.url %>"><%= environment.name %></a></td>
+        <td align="left"><%= environment.version %> <% if @environment.git_hub_release != "" %> (<a href="<%= environment.git_hub_release %>">release</a>)<% end %></td> 
 <!--        <td><%= environment.git_hub_release %></td>
         <td><%= environment.db_url %></td>
         <td><%= environment.db_user %></td>-->
